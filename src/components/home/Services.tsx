@@ -69,7 +69,24 @@ export default function Services() {
             From design to delivery - we provide end-to-end construction and engineering services tailored to your project needs.
           </p>
         </div>
-        <div className="flex flex-wrap gap-6 border-b border-white/10 mb-10">
+        {/* Mobile Dropdown Toggle */}
+        <div className="block md:hidden mb-8">
+          <select
+            value={activeTab}
+            onChange={(e) => setActiveTab(e.target.value)}
+            className="w-full bg-zinc-900 border border-white/10 rounded-sm px-4 py-4 text-xs font-bold text-white uppercase tracking-wider focus:outline-none focus:border-red-500 transition-colors appearance-none cursor-pointer"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E")`, backgroundRepeat: 'no-repeat', backgroundPosition: 'right 16px center' }}
+          >
+            {tabs.map((tab) => (
+              <option key={tab.id} value={tab.id} className="bg-zinc-900 text-white font-medium">
+                {tab.label}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Desktop Tabs */}
+        <div className="hidden md:flex flex-wrap gap-6 border-b border-white/10 mb-10">
           {tabs.map((tab) => (
             <button
               key={tab.id}

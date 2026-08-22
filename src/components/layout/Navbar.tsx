@@ -1,80 +1,105 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
 
-export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
+const links = [
+  { name: "Home",       href: "#hero" },
+  { name: "About Us",   href: "#about" },
+  { name: "About CEO",  href: "#about-ceo" },
+  { name: "Services",   href: "#services" },
+  { name: "Projects",   href: "#projects" },
+  { name: "Contact Us", href: "#contact-footer" },
+];
 
-  const links = [
-    { name: "About Us", href: "#about-us" },
-    { name: "About CEO", href: "#about-ceo" },
-    { name: "Services", href: "#services" },
-    { name: "Some of our projects", href: "#some-of-our-projects" },
-    { name: "Contact U", href: "#contact-u" },
-  ];
+export default function Navbar() {
+  const [isOpen, setIsOpen]     = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const handleNav = (href: string) => {
+    setIsOpen(false);
+    if (href === "#contact-footer") {
+      document.querySelector("footer")?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   return (
-    <nav className="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 transition-all duration-300">
+    <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? "bg-black/90 backdrop-blur-md shadow-lg shadow-black/30 border-b border-white/10" : "bg-transparent"}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+        <div className="flex items-center justify-between h-20">
+
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
-            <a href="#" className="text-3xl font-black text-red-600 tracking-tighter hover:scale-105 transition-transform duration-200">
-              Z<span className="text-white">.</span>
-            </a>
+          <button onClick={() => handleNav("#hero")} className="text-3xl font-black text-red-600 tracking-tighter hover:scale-105 transition-transform duration-200 flex-shrink-0">
+            Z<span className="text-white">.</span>
+          </button>
+
+          {/* Desktop links */}
+          <div className="hidden lg:flex items-center gap-1">
+            {links.map((link) =>
+              link.name === "Contact Us" ? (
+                <button
+                  key={link.name}
+                  onClick={() => handleNav(link.href)}
+                  className="ml-4 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-colors duration-200"
+                >
+                  {link.name}
+                </button>
+              ) : (
+                <button
+                  key={link.name}
+                  onClick={() => handleNav(link.href)}
+                  className="px-4 py-2 text-xs font-semibold uppercase tracking-wider text-gray-300 hover:text-white hover:bg-white/5 rounded-sm transition-all duration-200"
+                >
+                  {link.name}
+                </button>
+              )
+            )}
           </div>
-          
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-6">
-            {links.map((link) => (
-              <a
-                key={link.name}
-                href={link.href}
-                className="text-xs font-semibold uppercase tracking-wider text-gray-300 hover:text-red-600 transition-colors duration-200"
-              >
-                {link.name}
-              </a>
-            ))}
-          </div>
-          
-          {/* Mobile menu button */}
-          <div className="lg:hidden flex items-center">
-            <button 
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-300 hover:text-red-600 focus:outline-none transition-colors"
-            >
-              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
+
+          {/* Mobile burger */}
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="lg:hidden text-gray-300 hover:text-white transition-colors p-1"
+          >
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden bg-black/95 backdrop-blur-lg border-b border-white/10"
-          >
-            <div className="px-4 pt-2 pb-6 space-y-1 shadow-xl">
-              {links.map((link) => (
-                <a
+      {/* Mobile menu */}
+      {isOpen && (
+        <div className="lg:hidden bg-black/95 backdrop-blur-lg border-b border-white/10">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-1">
+            {links.map((link) =>
+              link.name === "Contact Us" ? (
+                <button
                   key={link.name}
-                  href={link.href}
-                  onClick={() => setIsOpen(false)}
-                  className="block px-3 py-3 rounded-md text-base font-medium text-gray-300 hover:text-red-600 hover:bg-white/5 transition-colors duration-200"
+                  onClick={() => handleNav(link.href)}
+                  className="w-full mt-2 px-4 py-3 bg-red-600 hover:bg-red-700 text-white text-xs font-bold uppercase tracking-wider rounded-sm transition-colors text-center"
                 >
                   {link.name}
-                </a>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                </button>
+              ) : (
+                <button
+                  key={link.name}
+                  onClick={() => handleNav(link.href)}
+                  className="w-full text-left px-4 py-3 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/5 rounded-sm transition-all duration-200"
+                >
+                  {link.name}
+                </button>
+              )
+            )}
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

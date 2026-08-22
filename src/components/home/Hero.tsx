@@ -1,6 +1,16 @@
+"use client";
+
 import Image from "next/image";
 
 export default function Hero() {
+  const handleScroll = (id: string) => {
+    if (id === "footer") {
+      document.querySelector("footer")?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section id="hero" className="relative min-h-[100dvh] w-full flex items-center justify-center pt-24 pb-12 md:pt-0 md:pb-0">
       {/* Background Image */}
@@ -23,10 +33,16 @@ export default function Hero() {
           We provide exceptional architectural and contracting services that combine craftsmanship, and reliability.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <button className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-sm transition-all duration-300 transform hover:scale-105 shadow-[0_0_20px_rgba(220,38,38,0.4)]">
+          <button 
+            onClick={() => handleScroll("footer")}
+            className="px-8 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-sm transition-all duration-300 transform hover:scale-105 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+          >
             START A PROJECT
           </button>
-          <button className="px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold rounded-sm transition-all duration-300">
+          <button 
+            onClick={() => handleScroll("projects")}
+            className="px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-bold rounded-sm transition-all duration-300"
+          >
             EXPLORE OUR PROJECTS
           </button>
         </div>
